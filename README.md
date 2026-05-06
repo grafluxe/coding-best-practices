@@ -132,13 +132,13 @@ const canUserDrive = (user: User): boolean => {
 
 The above logic is good because:
 
-- The function names clearly express what they do.
+- The function names clearly express what they do
 - You can quickly understand what's happening due to separating concerns into
-  individual functions.
-- Each function is small and handles a single responsibility.
-  - Having atomic functions promotes reusability.
+  individual functions
+- Each function is small and handles a single responsibility
+  - Having atomic functions promotes reusability
 - As a bonus, I use [destructuring] to remove the need for prepending `user` to
-  the relevant properties.
+  the relevant properties
 
 #### Bad
 
@@ -163,9 +163,9 @@ const drive = (user: User): boolean => {
 The above logic is bad because:
 
 - The function name does not clearly express what it does (and is acutally
-  misleading in this example).
-- There are redundant booleans/returns.
-- There's a lot of nesting, making it harder to quickly understand the logic.
+  misleading in this example)
+- There are redundant booleans/returns
+- There's a lot of nesting, making it harder to quickly understand the logic
 
 #### Bad
 
@@ -178,9 +178,9 @@ const driveable = (user: User): boolean =>
 
 The above logic is bad because:
 
-- The function name does not clearly express what it does.
-- Too much is crammed into one line.
-- The logic is hard to understand.
+- The function name does not clearly express what it does
+- Too much is crammed into one line
+- The logic is hard to understand
 
 ## More on Readability
 
@@ -190,12 +190,12 @@ to how it's written, doesn't mean that it's actually easy to read.
 
 Also:
 
-- Use verbs to help clarify a functions action.
+- Use verbs to help clarify a functions action
 - Declare variables where you need them (in the proper scope and next to its
-  first use).
-- Keep each function as short and focused as possible.
+  first use)
+- Keep each function as short and focused as possible
 - Set a max column length that aligns with your team and the language you're
-  using.
+  using
 
 ### A Note on Column Length
 
@@ -359,26 +359,26 @@ move to integration, feature, et al.
 
 Here are some valuable points from [Randy Shoup][rshoup] in regards to TDD:
 
-- The upfront investment increases the final outputs chance of success.
+- The upfront investment increases the final outputs chance of success
 - The more constrained in time and resources, the more important it is to build
   it right the first time. It's better to do it once really well, then do it
-  twice half-baked.
+  twice half-baked
 - Tests make better code; they give you the confidence to break things and the
-  courage to refactor.
+  courage to refactor
 
 ## Learn Functional Programming
 
 Alvin Alexander lists [general benefits][fp-benefits] as:
 
-- Pure functions are easier to reason about.
+- Pure functions are easier to reason about
 - Testing is easier, and pure functions lend themselves well to techniques like
-  property-based testing.
-- Debugging is easier.
-- Programs are more bulletproof.
+  property-based testing
+- Debugging is easier
+- Programs are more bulletproof
 - Programs are written at a higher level, and are therefore easier to
-  comprehend.
-- Function signatures are more meaningful.
-- Parallel/concurrent programming is easier.
+  comprehend
+- Function signatures are more meaningful
+- Parallel/concurrent programming is easier
 
 If coming from an [imperative][vsubramaniam] or [OOP background][fp2], put your
 current knowledge in the back of your head as you familiarize yourself with
@@ -388,15 +388,16 @@ Functional Programming. It [solves problems using a different set of rules][fp].
 
 A function/method is pure when:
 
-- It has no [side effects][side-effects] (is stateless).
+- It has no [side effects][side-effects] (is stateless)
   - It doesn't affect the outside world (e.g. no global variables, no database
-    calls, no API requests, no file access, no logic directly tied to user input).
-  - It handles exceptions gracefully (no THROWing).
-- [Its output only depends on its input.][aalexander]
-  - It doesn't hide dependencies nor mutate data.
-- It's [referentially transparent.][ref-trans]
-  - Its output is always the same when given the same arguments.
-  - Its output can replace the actual function call without changing behavior.
+    calls, no API requests, no file access, no logic directly tied to user
+    input)
+  - It handles exceptions gracefully (no THROWing)
+- [Its output only depends on its input][aalexander]
+  - It doesn't hide dependencies nor mutate data
+- It's [referentially transparent][ref-trans]
+  - Its output is always the same when given the same arguments
+  - Its output can replace the actual function call without changing behavior
 
 Note that functions which interact with a data/time object or ones that print to
 the screen are considered impure. So are singleton class variables, since they
@@ -438,9 +439,9 @@ if (logger) {
 
 The above logic is good because:
 
-- It separates different paths of execution.
-- It's easy to read.
-- It more clearly defines different use cases.
+- It separates different paths of execution
+- It's easy to read
+- It more clearly defines different use cases
 
 #### Bad
 
@@ -473,13 +474,13 @@ if (logger) {
 
 The above logic is bad because:
 
-- I combines 2 paths of execution into one (requires optional params).
-- It's harder to read.
+- I combines 2 paths of execution into one (requires optional params)
+- It's harder to read
   - If the names weren't self documenting, it wouldn't be as clear which
     parameters are needed for preview generation versus which are needed for
-    collecting metrics.
+    collecting metrics
 - It's signature doesn't make it clear that _both_ the `metrics` and `log`
-  parameters are needed for metrics to be calculated.
+  parameters are needed for metrics to be calculated
 
 ## Inject Dependencies
 
@@ -505,10 +506,10 @@ new Team().gender(database.genderId);
 
 The above logic is good because:
 
-- Its output solely depends on its input.
-- It does not affect the outside world.
+- Its output solely depends on its input
+- It does not affect the outside world
 - Based on its signature, it's clear what the function does and what data it
-  needs to do it.
+  needs to do it
 
 #### Bad
 
@@ -525,9 +526,9 @@ new Team().gender();
 
 The above logic is bad because:
 
-- It affects the outside world (by accessing the database internally).
+- It affects the outside world (by accessing the database internally)
 - Its signature does not provide enough detail to understand the
-  implementation.
+  implementation
 
 #### Bad
 
@@ -543,7 +544,7 @@ new Team().gender(database);
 The above logic is bad because:
 
 - It's expecting the entire database object when only one property from it is
-  needed.
+  neededs
 
 ## Additional Considerations
 
