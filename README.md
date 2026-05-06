@@ -5,7 +5,7 @@ codebase. Whether in a team or working solo on a project, an applications
 architecture and the design patterns used to create it are key to a successful
 execution. This document was created to serve as a language agnostic set of
 rules to follow when developing. Note that most code examples are in written in
-Scala.
+TypeScript.
 
 ## Contents
 
@@ -42,12 +42,11 @@ Scala.
 ## Respect the Best Practices of the Language You're Writing In
 
 If the language you are writing in has a style guide, familiarize yourself with
-it (e.g. [Scala style guide][scala-style-guide]). If there's no official
-guide, learn about the common standards for your language. While you shouldn't
-blindly follow a set of rules, you should understand why they're in place and
-consider updating your style to match them. Doing so makes it easier for other
-developers to follow your logic. Furthermore, having such knowledge will give
-you confidence to break a rule if required (though this should seldomly happen).
+it. If there's no official guide, learn about the common standards for your
+language. While you shouldn't blindly follow a set of rules, you should
+understand why they're in place and consider updating your style to match them.
+Doing so makes it easier for other developers to follow your logic. Furthermore,
+having such knowledge will give you confidence to break a rule if desired.
 
 We often switch between languages throughout a project, so once you switch,
 change gears so that you're coding in the style of the current language. Doing
@@ -55,32 +54,43 @@ so will go a long way in helping your team have unified code.
 
 As a simple example, here's how you can create variables in:
 
+#### TypeScript
+
+```ts
+const theGoodFoot: string[] = [];
+const isOnIt = true;
+```
+
+The variable names are in camelCase and the optional semi-colons are included.
+Notice that members with obvious types don't need their types annotated, as they
+are inferred.
+
+#### JavaScript
+
+```js
+const theGoodFoot = [];
+const isOnIt = true;
+```
+
+The variable names are in camelCase and the optional [semi-colons are
+included][js-semicolon].
+
 #### Scala
 
 ```scala
-val theGoodFoot: String = "right"
-private val isOnItNow = true
+val theGoodFoot: Array[String] = Array.empty[String]
+private val isOnIt = true
 ```
 
 The variable names are in camelCase and the optional semi-colons are excluded.
 Notice that private members with obvious types don't need their
 [types annotated][scala-types].
 
-#### JavaScript
-
-```js
-const theGoodFoot = "right";
-const isOnItNow = true;
-```
-
-The variable names are in camelCase and the optional [semi-colons are
-included][js-semicolon].
-
 #### PHP
 
 ```php
-$the_good_foot = "right";
-$is_on_it_now = true;
+$the_good_foot = [];
+$is_on_it = true;
 ```
 
 The variable names are in snake_case.
@@ -105,21 +115,19 @@ For example, all three of the below code-blocks do the same thing:
 
 #### Good
 
-```scala
-def canUserDrive(user: User): Boolean = {
-  val User(licenseSuspended, age, hasLearnersPermit, vision) = user
+```ts
+const isLegalAge = (age: number, hasPermit: boolean): boolean =>
+  age >= 18 || (age >= 16 && hasPermit);
 
-  if (licenseSuspended) {
-    false
-  } else {
-    isLegalAge(age, hasLearnersPermit) && hasGoodSight(vision)
-  }
-}
+const hasGoodSight = (vision: [number, number]): boolean => vision[1] < 50;
 
-def isLegalAge(age: Int, hasPermit: Boolean): Boolean =
-  age >= 18 || (age >= 16 && hasPermit)
+const canUserDrive = (user: User): boolean => {
+  const { licenseSuspended, age, hasLearnersPermit, vision } = user;
 
-def hasGoodSight(vision: Tuple2[Int, Int]): Boolean = vision._2 < 50
+  return licenseSuspended
+    ? false
+    : isLegalAge(age, hasLearnersPermit) && hasGoodSight(vision);
+};
 ```
 
 The above logic is good because:
@@ -134,22 +142,22 @@ The above logic is good because:
 
 #### Bad
 
-```scala
-def drive(user: User): Boolean = {
+```ts
+const drive = (user: User): boolean => {
   if (user.licenseSuspended) {
-    false
+    return false;
   } else {
     if (user.age >= 18 || (user.age >= 16 && user.hasLearnersPermit)) {
-      if (user.vision._2 < 50) {
-        true
+      if (user.vision[1] < 50) {
+        return true;
       } else {
-        false
+        return false;
       }
     } else {
-      false
+      return false;
     }
   }
-}
+};
 ```
 
 The above logic is bad because:
@@ -161,8 +169,11 @@ The above logic is bad because:
 
 #### Bad
 
-```scala
-def driveable(user: User): Boolean = !user.licenseSuspended && (user.age >= 18 || (user.age >= 16 && user.hasLearnersPermit)) && user.vision._2 < 50
+```ts
+const driveable = (user: User): boolean =>
+  !user.licenseSuspended &&
+  (user.age >= 18 || (user.age >= 16 && user.hasLearnersPermit)) &&
+  user.vision[1] < 50;
 ```
 
 The above logic is bad because:
@@ -170,17 +181,6 @@ The above logic is bad because:
 - The method name does not clearly express what it does.
 - Too much is crammed into one line.
 - The logic is hard to understand.
-
---
-
-Note that my [rule for when to use curly-braces differs from the Scala style
-guide][curly-braces]. For consistency, I use curly-braces in all cases expect
-for when a short expression is being assigned to a member:
-
-```scala
-val color: String = if (leaf.isDefined) "green" else "blue"
-def colorize(color: String): String = if (color == "green") run.a() else run.b()
-```
 
 ## More on Readability
 
@@ -223,27 +223,27 @@ cases where a variable changes unexpectedly in the middle of running a process.
 The more mutable code you have, the higher the risk of errors in your
 application.
 
-Scala example:
+Example 1:
 
 #### Good
 
-```scala
-val greenColor = "green"
+```ts
+const greenColor = "green";
 
-greenColor = "red" // Will error (since using 'val')
+// greenColor = "red"; // Will error (since using 'const')
 ```
 
 #### Bad
 
-```scala
-var greenColor = "green"
+```ts
+let greenColor = "green";
 
-greenColor = "red" // Will pass (since using 'var')
+greenColor = "red"; // Will pass (since using 'let')
 ```
 
 --
 
-JavaScript example:
+Example 2:
 
 #### Good
 
@@ -282,20 +282,41 @@ behaviors][swlaschin].
 
 For example, we rarely hard-code methods like this:
 
-```scala
-def countToTen() = (1 to 10).foreach(num => println("#" + num))
+```ts
+const countToTen = () => {
+  for (let i = 1; i <= 10; i++) {
+    console.log("#" + i);
+  }
+};
+
+// Usage
+countToTen();
 ```
 
 We often create parameters to make methods more dynamic, like this:
 
-```scala
-def countTo(n: Int) = (1 to n).foreach(num => println("#" + num))
+```ts
+const countTo = (n: number) => {
+  for (let i = 1; i <= n; i++) {
+    console.log("#" + i);
+  }
+};
+
+// Usage
+countTo(10);
 ```
 
 We should pass in the behaviors too:
 
-```scala
-def countTo(n: Int, fn: (Int) => _) = (1 to n).foreach(fn)
+```ts
+const countTo = (n: number, fn: (n: number) => void) => {
+  for (let i = 1; i <= n; i++) {
+    fn("#" + i);
+  }
+};
+
+// Usage
+countTo(10, console.log);
 ```
 
 Many languages have methods like this built in: just think of a `map` and
@@ -389,30 +410,28 @@ paths of executions (if/switch statements), consider splitting your method.
 
 #### Good
 
-```scala
+```ts
 class Preview {
-  def respond(catId: String): String = getPreview(catId).body
+  respond = (catId: string): string => getPreview(catId).body;
 
-  def respondWithMetrics(catId: String, metrics: Metrics, log: LogR): String = {
-    metrics.createMeter()
-    log.init()
+  respondWithMetrics = (catId: string, metrics: Metrics, log: LogR): string => {
+    metrics.createMeter();
+    log.init();
 
-    val preview = respond(catId)
+    const preview = this.respond(catId);
 
-    log.complete()
-    metrics.exit()
+    log.complete();
+    metrics.exit();
 
-    preview
-  }
-
-  ...
+    return preview;
+  };
 }
 
 // Usage
 if (logger) {
-  new Preview().respondWithMetrics("vpaid", new Metrics, logger)
+  new Preview().respondWithMetrics("vpaid", new Metrics(), logger);
 } else {
-  new Preview().respond("vpaid")
+  new Preview().respond("vpaid");
 }
 ```
 
@@ -424,41 +443,36 @@ The above logic is good because:
 
 #### Bad
 
-```scala
+```ts
 class Preview {
-  def respond(
-      catId: String,
-      metrics: Option[Metrics] = None,
-      log: Option[LogR] = None): String = {
-    if (metrics.isDefined && log.isDefined) {
-      metrics.createMeter()
-      log.init()
+  respond = (catId: string, metrics?: Metrics, log?: LogR): string => {
+    if (metrics && log) {
+      metrics.createMeter();
+      log.init();
 
-      val preview = getPreview(catId).body
+      const preview = getPreview(catId).body;
 
-      log.complete()
-      metrics.exit()
+      log.complete();
+      metrics.exit();
 
-      preview
+      return preview;
     } else {
-      getPreview(catId).body
+      return getPreview(catId).body;
     }
-  }
-
-  ...
+  };
 }
 
 // Usage
 if (logger) {
-  new Preview().respond("vpaid", Some(new Metrics), Some(logger))
+  new Preview().respond("vpaid", new Metrics(), logger);
 } else {
-  new Preview().respond("vpaid")
+  new Preview().respond("vpaid");
 }
 ```
 
 The above logic is bad because:
 
-- I combines 2 paths of execution into one (requires Option types).
+- I combines 2 paths of execution into one (requires optional params).
 - It's harder to read.
   - If the names weren't self documenting, it wouldn't be as clear which
     parameters are needed for preview generation versus which are needed for
@@ -478,12 +492,13 @@ an argument when only one property (from that object) is needed.
 
 #### Good
 
-```scala
+```ts
 class Team {
-  def gender(genderId: Int): String = if (genderId == 0) "female" else "male"
+  gender = (genderId: number): string => (genderId === 0 ? "female" : "male");
 }
 
-new Team().gender(database.genderId)
+// Usage
+new Team().gender(database.genderId);
 ```
 
 The above logic is good because:
@@ -495,14 +510,15 @@ The above logic is good because:
 
 #### Bad
 
-```scala
+```ts
 class Team {
-  val database = new Database(...)
+  private database = new Database();
 
-  def gender(): String = if (database.genderId == 0) "female" else "male"
+  gender = (): string => (this.database.genderId === 0 ? "female" : "male");
 }
 
-new Team().gender()
+// Usage
+new Team().gender();
 ```
 
 The above logic is bad because:
@@ -513,12 +529,13 @@ The above logic is bad because:
 
 #### Bad
 
-```scala
+```ts
 class Team {
-  def gender(db: Database): String = if (db.genderId == 0) "female" else "male"
+  gender = (db: Database): string => (db.genderId === 0 ? "female" : "male");
 }
 
-new Team().gender(database)
+// Usage
+new Team().gender(database);
 ```
 
 The above logic is bad because:
@@ -534,22 +551,28 @@ equivalents (or write [recursive methods][recursive]).
 
 #### Good
 
-```scala
-def addDollarSign(numbers: List[Int]): List[String] =  numbers.map("$" + _)
+```ts
+const addDollarSign = (nums: number[]): string[] => nums.map((n) => "$" + n);
 
-addDollarSign(List(3, 7)) // List($3, $7)
+// Usage
+addDollarSign([3, 7]); // ["$3", "$7"]
 ```
 
 #### Bad
 
-```scala
-def addDollarSign(numbers: List[Int]): List[String] = {
-  var updated = new scala.collection.mutable.ListBuffer[String]()
-  for (n <- numbers) updated += "$" + n
-  updated.toList
-}
+```ts
+const addDollarSign = (numbers: number[]): string[] => {
+  const updated: string[] = [];
 
-addDollarSign(List(3, 7)) // List($3, $7)
+  for (const n of numbers) {
+    updated.push("$" + n);
+  }
+
+  return updated;
+};
+
+// Usage
+addDollarSign([3, 7]); // ["$3", "$7"]
 ```
 
 ### Annotate Appropriately
@@ -557,30 +580,29 @@ addDollarSign(List(3, 7)) // List($3, $7)
 If using a statically typed language, use types in all public members and when
 they help document the code, but not when they're obvious.
 
-```scala
+```ts
 // Annotations helps understandability
-val relatedPages: Seq = pages.getRelevant(book.currentPage)
-val userNode: Option[NodeAsset] = user.getNode(placement)
-def reportByLines(reportId: Int): Stream[String] = ???
+const relatedPages: number[] = pages.getRelevant(book.currentPage);
+const userNode: NodeAsset | null = user.getNode(placement);
+const reportByLines = (reportId: number): Promise<string[]> => { ... }
 
 // No annotation needed since the types are clear
-val name = "James"
-val age = 85
-def add5(n: Int) = n + 5
+const name = "James";
+const age = 85;
+const add5 = (n: number) => n + 5;
 ```
 
 ### Comment Your Regular Expressions
 
-Regex can be hard to read, so add comments to help explain what they do.
+Regex can be hard to read, so add comments to help explain what they do (and/or
+use _named capturing groups_ if supported).
 
-```scala
-val subject = "He's not too fancy but his line is pretty clean?"
-val encoded = {
-  subject
-    .replaceAll("""[?.]""", "!") // Replaces '?' or '.' with '!'
-    .replaceAll("""(not\s+too|pretty)\s+""", "") // Removes blacklisted words
-    .replaceAll("""but|or|if""", "and") // Replaces conjunctions with 'and'
-}
+```ts
+const subject = "He's not too fancy but his line is pretty clean?";
+const encoded = subject
+  .replaceAll("[?.]", "!") // Replaces all '?' or '.' with '!'
+  .replaceAll("(not\\s+too|pretty)\\s+", "") // Removes all blacklisted words
+  .replaceAll("but|or|if", "and"); // Replaces all conjunctions with 'and'
 ```
 
 ### Indent Properly
@@ -590,37 +612,35 @@ practices where present.
 
 #### Good
 
-```scala
-val name: String = "James"
-def calculateAge(user: User): Int = user.birthday.toYears
-def getLunarPhase(
-    month: Int,
-    date: Int,
-    year: Int,
-    phase: Phase): String = {
-  phase.calc(month, day, year).pull(mode = 1)
-}
+```ts
+const name: string = "James";
+const calculateAge = (dob: User["birthday"]): number => dob.toYears;
+const getLunarPhase = (
+  month: number,
+  date: number,
+  year: number,
+  phase: Phase,
+): string => {
+  return phase.calc(month, day, year).pull({ mode: 1 });
+};
+
 if (!baz) {
-  foo("bar")
+  foo("bar");
 }
 ```
 
 #### Bad
 
-```scala
-val name:String = "James"
-val name :String = "James"
-val name : String = "James"
-
-def calculateAge (user: User): Int = user.birthday.toYears
-def calculateAge(user: User):Int=user.birthday.toYears
-
-def getLunarPhase(month: Int,
-                  date: Int,
-                  year: Int,
-                  phase: Phase): String = {
-  phase.calc(month,day,year).pull(mode=1)
-}
+```
+const name:string = "James";
+const name :string = "James";
+const name : string  =  "James";
+const calculateAge =( dob: User [ "birthday" ] ) :number=>dob.toYears;
+const getLunarPhase = (month: number,
+  date: number, year: number,
+  phase: Phase): string => {
+  phase.calc(month,day,year).pull({mode:1})
+};
 
 if(!baz){
   foo("bar")
@@ -643,69 +663,27 @@ into individual lines for improved readability.
 
 #### Good
 
-```scala
-val asset: Option[PlacementAsset] = placement.getAsset(
+```ts
+const asset: PlacementAsset = placement.getAsset(
   projectScope,
-  requestParams(
-    Params.ID,
-    Params.AGE,
-    Params.GENDER
-  ),
-  metaData
-)
+  requestParams(Params.id, Params.age, Params.gender),
+  metaData,
+);
 ```
 
 #### Bad
 
-```scala
-val asset: Option[PlacementAsset] = placement.getAsset(projectScope,
-  requestParams(Params.ID, Params.AGE, Params.GENDER), metaData)
+```ts
+const asset: PlacementAsset = placement.getAsset(
+  projectScope,
+  Params.id,
+  Params.age,
+  Params.gender,
+  metaData.time,
+  metaData.geo,
+  metaData.areaCode,
+);
 ```
-
-Note that my [line-breaking preference slightly differs from the Scala style
-guide][method-line-breaks]. For improved readability, when breaking a method
-into multiple lines, I make sure the closing line of the expression matches the
-column of the opening line. For example:
-
-#### Scala Style
-
-```scala
-val assetName: String = placement.getAssetName(
-  requestParams(
-    Params.ID,
-    Params.AGE),
-  queries(
-    true,
-    Queries.RENDER_SCHEME,
-    Queries.CONTEXT))
-  .getOrElse(placement.defaultAsset)
-  .replace("""\d""", "n")
-```
-
-By having the end parentheses on the same line of the last argument, it's hard
-to tell where a method ends. At first glance, it looks like `getOrElse` and
-`replace` are arguments too.
-
-#### My Recommended Style
-
-```scala
-val assetName: String = placement.getAssetName(
-  requestParams(
-    Params.ID,
-    Params.AGE
-  ),
-  queries(
-    true,
-    Queries.RENDER_SCHEME,
-    Queries.CONTEXT,
-  )
-)
-.getOrElse(placement.defaultAsset)
-.replace("""\d""", "n")
-```
-
-By having the end parentheses at the same column of the beginning of the
-expression, it's more clear.
 
 ### Avoid Code Smells
 
