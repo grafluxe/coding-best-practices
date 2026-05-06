@@ -604,9 +604,9 @@ use _named capturing groups_ if supported).
 ```ts
 const subject = "He's not too fancy but his line is pretty clean?";
 const encoded = subject
-  .replaceAll("[?.]", "!") // Replaces all '?' or '.' with '!'
-  .replaceAll("(not\\s+too|pretty)\\s+", "") // Removes all blacklisted words
-  .replaceAll("but|or|if", "and"); // Replaces all conjunctions with 'and'
+  .replaceAll("?", "!") // Replaces all '?' with '!'
+  .replaceAll(/not\s+too|pretty/g, "") // Removes all blacklisted words
+  .replaceAll(/but|or|if/g, "and"); // Replaces all conjunctions with 'and'
 ```
 
 ### Indent Properly
