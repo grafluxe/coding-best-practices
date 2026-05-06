@@ -485,7 +485,7 @@ The above logic is bad because:
 ## Inject Dependencies
 
 Dependency injection improves your codes purity and makes it easier to
-understand. Strive to create functions that you [can understand][fp3] based on
+understand. Strive to create functions that you can understand based on
 its name and parameters. When calling a function, you shouldn't have to care
 about the implementation and should know what its output will be based on how
 it's called.
@@ -721,7 +721,6 @@ patterns and principles which help you, your team, and your projects flourish.
 [ref-trans]: https://en.wikipedia.org/wiki/Referential_transparency
 [side-effects]: https://dzone.com/articles/side-effects-1
 [prettier]: https://prettier.io/
-[scala-style-guide]: https://docs.scala-lang.org/style/
 [scala-types]: https://docs.scala-lang.org/style/types.html
 [js-semicolon]: http://2ality.com/2011/05/semicolon-insertion.html
 [kiss]: https://en.wikipedia.org/wiki/KISS_principle
@@ -729,22 +728,19 @@ patterns and principles which help you, your team, and your projects flourish.
 [jkerr]: https://youtu.be/pMGY9ViIGNU?t=2186
 [jpapa]: https://youtu.be/56mETnrByBM?t=642
 [max-chars]: https://en.wikipedia.org/wiki/Characters_per_line#In_programming
-[tdd]: https://blog.testlodge.com/what-is-tdd/
+[tdd]: https://en.wikipedia.org/wiki/Test-driven_development
 [rshoup]: https://youtu.be/E8-e-3fRHBw?t=528
 [jspahr]: https://youtu.be/7AqXBuJOJkY?t=1403
 [swlaschin]: https://youtu.be/srQt1NAHYC0?t=1276
 [fp-benefits]: https://alvinalexander.com/scala/fp-book/benefits-of-functional-programming
 [fp]: https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#59c5
 [fp2]: https://sidburn.github.io/blog/2016/03/14/immutability-and-pure-functions
-[fp3]: https://arnhem.luminis.eu/pure-bliss-with-pure-functions-in-java/
-[cfowler]: https://youtu.be/rNQR1HqfEl0?t=342
-[recursive]: https://www.safaribooksonline.com/library/view/learning-scala/9781449368814/ch04.html#recursive_functions_section
+[cfowler]: https://youtu.be/F8GB1eEr7Tw?t=342
+[recursive]: https://en.wikipedia.org/wiki/Recursion_(computer_science)
 [code-smell]: https://en.wikipedia.org/wiki/Code_smell#Common_code_smells
-[function-line-breaks]: https://docs.scala-lang.org/style/indentation.html#methods-with-numerous-arguments
-[curly-braces]: https://docs.scala-lang.org/style/control-structures.html#curly-braces
-[destructuring]: http://twitter.github.io/effectivescala/#Functional%20programming-Destructuring%20bindings
+[destructuring]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring
 [khenney]: https://youtu.be/APUCMSPiNh4?t=3683
 [aruhaak]: https://youtu.be/6f5dt923FmQ?t=459
 [vsubramaniam]: https://youtu.be/RRcnFd9TbjI?t=871
-[haskell]: http://learnyouahaskell.com
+[haskell]: https://learnyouahaskell.github.io
 [js-fp]: https://mostly-adequate.gitbooks.io/mostly-adequate-guide
