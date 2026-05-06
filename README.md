@@ -14,7 +14,7 @@ TypeScript.
 - [Be Consistent](#be-consistent)
 - [Favor Readability](#favor-readability)
 - [More on Readability](#more-on-readbility)
-    - [A Note on Column Length](#a-note-on-column-length)
+  - [A Note on Column Length](#a-note-on-column-length)
 - [Favor Simplicity](#favor-simplicity)
 - [Favor Immutability](#favor-immutability)
 - [Favor Reusability](#favor-reusability)
@@ -27,17 +27,17 @@ TypeScript.
 - [More on Function Purity](#more-on-function-purity)
 - [Inject Dependencies](#inject-dependencies)
 - [Additional Considerations](#additional-considerations)
-    - [Avoid Loops](#avoid-loops)
-    - [Annotate Appropriately](#annotate-appropriately)
-    - [Comment Your Regular Expressions](#comment-your-regular-expressions)
-    - [Indent Properly](#indent-properly)
-    - [Decrease Method Arguments](#decrease-method-arugments)
-    - [Avoid Code Smells](#avoid-code-smells)
-    - [Remember Conway's Law](#remember-conways-law)
+  - [Avoid Loops](#avoid-loops)
+  - [Annotate Appropriately](#annotate-appropriately)
+  - [Comment Your Regular Expressions](#comment-your-regular-expressions)
+  - [Indent Properly](#indent-properly)
+  - [Decrease Function Arguments](#decrease-function-arugments)
+  - [Avoid Code Smells](#avoid-code-smells)
+  - [Remember Conway's Law](#remember-conways-law)
 - [Continue Learning](#continue-learning)
 - [Finally](#finally)
 
-***
+---
 
 ## Respect the Best Practices of the Language You're Writing In
 
@@ -108,7 +108,7 @@ logic.
 
 If you find yourself nesting multiple expressions, review your logic, as there's
 probably a better way to write it (e.g. separate your logic into [small
-meaningful methods][cfowler]). Follow the single responsibility principle and
+meaningful functions][cfowler]). Follow the single responsibility principle and
 strive to create atomic components (each doing as few things as possible).
 
 For example, all three of the below code-blocks do the same thing:
@@ -132,13 +132,13 @@ const canUserDrive = (user: User): boolean => {
 
 The above logic is good because:
 
-- The method names clearly express what they do.
+- The function names clearly express what they do.
 - You can quickly understand what's happening due to separating concerns into
-  individual methods.
-- Each method is small and handles a single responsibility.
-  - Having atomic methods promotes reusability.
-- As a bonus, I use [destructuring] to remove the need for
-  prepending `user` to the relevant properties.
+  individual functions.
+- Each function is small and handles a single responsibility.
+  - Having atomic functions promotes reusability.
+- As a bonus, I use [destructuring] to remove the need for prepending `user` to
+  the relevant properties.
 
 #### Bad
 
@@ -162,7 +162,7 @@ const drive = (user: User): boolean => {
 
 The above logic is bad because:
 
-- The method name does not clearly express what it does (and is acutally
+- The function name does not clearly express what it does (and is acutally
   misleading in this example).
 - There are redundant booleans/returns.
 - There's a lot of nesting, making it harder to quickly understand the logic.
@@ -178,7 +178,7 @@ const driveable = (user: User): boolean =>
 
 The above logic is bad because:
 
-- The method name does not clearly express what it does.
+- The function name does not clearly express what it does.
 - Too much is crammed into one line.
 - The logic is hard to understand.
 
@@ -190,10 +190,10 @@ to how it's written, doesn't mean that it's actually easy to read.
 
 Also:
 
-- Use verbs to help clarify a methods action.
+- Use verbs to help clarify a functions action.
 - Declare variables where you need them (in the proper scope and next to its
   first use).
-- Keep each method as short and focused as possible.
+- Keep each function as short and focused as possible.
 - Set a max column length that aligns with your team and the language you're
   using.
 
@@ -275,12 +275,12 @@ it][khenney].
 
 ## Favor Reusability
 
-Keep your methods short and strive to increase modularity by making functions
-reusable. Many of us are accustomed to passing values into a method (via
+Keep your functions short and strive to increase modularity by making functions
+reusable. Many of us are accustomed to passing values into a function (via
 parameters) in order to make them more reusable, consider also [passing in
 behaviors][swlaschin].
 
-For example, we rarely hard-code methods like this:
+For example, we rarely hard-code functions like this:
 
 ```ts
 const countToTen = () => {
@@ -293,7 +293,7 @@ const countToTen = () => {
 countToTen();
 ```
 
-We often create parameters to make methods more dynamic, like this:
+We often create parameters to make functions more dynamic, like this:
 
 ```ts
 const countTo = (n: number) => {
@@ -319,7 +319,7 @@ const countTo = (n: number, fn: (n: number) => void) => {
 countTo(10, console.log);
 ```
 
-Many languages have methods like this built in: just think of a `map` and
+Many languages have functions like this built in: just think of a `map` and
 `filter`.
 
 ## Don't Repeat Yourself
@@ -328,17 +328,17 @@ Being [DRY][dry] appropriately condenses code, promotes modularity, and
 simplifies future updates (while decreasing chances for bugs caused by updating
 logic in one place and missing it in another).
 
-For example, if logic is needed more than once in a single file, create a method
-*in that file* so that it can be executed repeatedly. If logic is needed across
-multiple files or is complex (defined as a series of related methods), move it
-into its own file/class/module.
+For example, if logic is needed more than once in a single file, create a
+function _in that file_ so that it can be executed repeatedly. If logic is
+needed across multiple files or is complex (defined as a series of related
+functions), move it into its own file/class/module.
 
 ## Document Your Code
 
-Add inline documentation for all public methods. When it comes to comments,
+Add inline documentation for all public functions. When it comes to comments,
 make them count and make sure to maintain them as your code changes. If your
 comment can be replaced with a proper code refactor, do so (e.g. improve a
-method name or refactor an if-statement to clearly express what the logic does
+function name or refactor an if-statement to clearly express what the logic does
 without needing to add a comment). When using well named members, your logic
 becomes self documenting, and you'll notice that comments become less important.
 As [John Papa][jpapa] says, "explain in code, not in comments."
@@ -353,7 +353,7 @@ consider implementing a [code formatter][prettier] if necessary.
 
 Consider a [test-driven approach][tdd] to fail fast and decrease chances of bugs
 later in your application. Moreover, writing tests first forces you to better
-create pure and independent methods -- using dependency injection to create
+create pure and independent functions -- using dependency injection to create
 autonomous and more clear code (with less mocks). Start with unit tests, then
 move to integration, feature, et al.
 
@@ -386,11 +386,11 @@ Functional Programming. It [solves problems using a different set of rules][fp].
 
 ## Use Pure Functions Whenever Possible
 
-A method/function is pure when:
+A function/method is pure when:
 
 - It has no [side effects][side-effects] (is stateless).
   - It doesn't affect the outside world (e.g. no global variables, no database
-  calls, no API requests, no file access, no logic directly tied to user input).
+    calls, no API requests, no file access, no logic directly tied to user input).
   - It handles exceptions gracefully (no THROWing).
 - [Its output only depends on its input.][aalexander]
   - It doesn't hide dependencies nor mutate data.
@@ -398,15 +398,16 @@ A method/function is pure when:
   - Its output is always the same when given the same arguments.
   - Its output can replace the actual function call without changing behavior.
 
-Note that methods which interact with a data/time object or ones that print to
+Note that functions which interact with a data/time object or ones that print to
 the screen are considered impure. So are singleton class variables, since they
 [act like global objects][jspahr].
 
 ## More on Function Purity
 
-Be idempotent whenever possible -- making the same method call multiple times
-should always produce the same result. Additionally, if your method has multiple
-paths of executions (if/switch statements), consider splitting your method.
+Be idempotent whenever possible -- making the same function call multiple times
+should always produce the same result. Additionally, if your function has
+multiple paths of executions (if/switch statements), consider splitting your
+function.
 
 #### Good
 
@@ -477,15 +478,16 @@ The above logic is bad because:
   - If the names weren't self documenting, it wouldn't be as clear which
     parameters are needed for preview generation versus which are needed for
     collecting metrics.
-- It's signature doesn't make it clear that *both* the `metrics` and `log`
+- It's signature doesn't make it clear that _both_ the `metrics` and `log`
   parameters are needed for metrics to be calculated.
 
 ## Inject Dependencies
 
 Dependency injection improves your codes purity and makes it easier to
-understand. Strive to create methods that you [can understand][fp3] based on its
-name and parameters. When calling a method, you shouldn't have to care about the
-implementation and should know what its output will be based on how it's called.
+understand. Strive to create functions that you [can understand][fp3] based on
+its name and parameters. When calling a function, you shouldn't have to care
+about the implementation and should know what its output will be based on how
+it's called.
 
 Furthermore, only pass in data that's needed; do not send in an entire object as
 an argument when only one property (from that object) is needed.
@@ -505,8 +507,8 @@ The above logic is good because:
 
 - Its output solely depends on its input.
 - It does not affect the outside world.
-- Based on its signature, it's clear what the method does and what data it needs
-  to do it.
+- Based on its signature, it's clear what the function does and what data it
+  needs to do it.
 
 #### Bad
 
@@ -524,7 +526,7 @@ new Team().gender();
 The above logic is bad because:
 
 - It affects the outside world (by accessing the database internally).
-- It's signature does not provide enough detail to understand the
+- Its signature does not provide enough detail to understand the
   implementation.
 
 #### Bad
@@ -546,8 +548,9 @@ The above logic is bad because:
 ## Additional Considerations
 
 ### Avoid Loops
-Avoid loops of any kind (while, for, et. al) and replace with built-in pure
-equivalents (or write [recursive methods][recursive]).
+
+Avoid loops (while, for, et. al) and replace with built-in pure equivalents (or
+write [recursive functions][recursive]).
 
 #### Good
 
@@ -652,10 +655,10 @@ if(! baz){
 
 Use two space indentation over four, and no tabs.
 
-### Decrease Method Arguments
+### Decrease Function Arguments
 
-If your method has many arguments, it's probably a sign of code smell, so
-revisit its implementation. If you still need many arguments in your method
+If your function has many arguments, it's probably a sign of code smell, so
+revisit its implementation. If you still need many arguments in your function
 after a proper refactor, consider grouping related objects together.
 
 Note that if your arguments extend pass your max character limit, break them
@@ -712,7 +715,6 @@ Care about the code you write... and choose a set of styles that you can stick
 with to create an environment you enjoying working in... all while using
 patterns and principles which help you, your team, and your projects flourish.
 
-
 [conway]: https://www.thoughtworks.com/insights/blog/applying-conways-law-improve-your-software-development
 [aalexander]: https://alvinalexander.com/scala/fp-book/pure-functions-and-io-input-output
 [ref-trans]: https://en.wikipedia.org/wiki/Referential_transparency
@@ -737,7 +739,7 @@ patterns and principles which help you, your team, and your projects flourish.
 [cfowler]: https://youtu.be/rNQR1HqfEl0?t=342
 [recursive]: https://www.safaribooksonline.com/library/view/learning-scala/9781449368814/ch04.html#recursive_functions_section
 [code-smell]: https://en.wikipedia.org/wiki/Code_smell#Common_code_smells
-[method-line-breaks]: https://docs.scala-lang.org/style/indentation.html#methods-with-numerous-arguments
+[function-line-breaks]: https://docs.scala-lang.org/style/indentation.html#methods-with-numerous-arguments
 [curly-braces]: https://docs.scala-lang.org/style/control-structures.html#curly-braces
 [destructuring]: http://twitter.github.io/effectivescala/#Functional%20programming-Destructuring%20bindings
 [khenney]: https://youtu.be/APUCMSPiNh4?t=3683
