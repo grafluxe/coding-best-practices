@@ -7,11 +7,6 @@ execution. This document was created to serve as a language agnostic set of
 rules to follow when developing. Note that most code examples are in written in
 Scala.
 
-If you disagree with a below principle and can offer a better option (backed by
-facts that support it), please let me know. The goal's not to force change or
-have one person define the entire rule-set, but to define a process that
-improves each developer and the team as a whole.
-
 ## Contents
 
 - [Respect the Best Practices of the Language You're Writing
