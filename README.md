@@ -548,7 +548,7 @@ The above logic is bad because:
 
 ### Avoid Loops
 
-Avoid loops (while, for, et. al) and replace with built-in pure equivalents (or
+Avoid loops (while, for, et al.) and replace with built-in pure equivalents (or
 write [recursive functions][recursive]).
 
 #### Good
