@@ -331,7 +331,7 @@ logic in one place and missing it in another).
 For example, if logic is needed more than once in a single file, create a
 function _in that file_ so that it can be executed repeatedly. If logic is
 needed across multiple files or is complex (defined as a series of related
-functions), move it into its own file/class/module.
+functions), move it into its own file/module.
 
 ## Document Your Code
 
@@ -413,27 +413,29 @@ function.
 #### Good
 
 ```ts
-class Preview {
-  respond = (catId: string): string => getPreview(catId).body;
+const respond = (catId: string): string => getPreview(catId).body;
 
-  respondWithMetrics = (catId: string, metrics: Metrics, log: LogR): string => {
-    metrics.createMeter();
-    log.init();
+const respondWithMetrics = (
+  catId: string,
+  metrics: Metrics,
+  log: LogR,
+): string => {
+  metrics.createMeter();
+  log.init();
 
-    const preview = this.respond(catId);
+  const preview = this.respond(catId);
 
-    log.complete();
-    metrics.exit();
+  log.complete();
+  metrics.exit();
 
-    return preview;
-  };
-}
+  return preview;
+};
 
 // Usage
 if (logger) {
-  new Preview().respondWithMetrics("vpaid", new Metrics(), logger);
+  respondWithMetrics("vpaid", initMetrics(), logger);
 } else {
-  new Preview().respond("vpaid");
+  respond("vpaid");
 }
 ```
 
@@ -446,29 +448,27 @@ The above logic is good because:
 #### Bad
 
 ```ts
-class Preview {
-  respond = (catId: string, metrics?: Metrics, log?: LogR): string => {
-    if (metrics && log) {
-      metrics.createMeter();
-      log.init();
+const respond = (catId: string, metrics?: Metrics, log?: LogR): string => {
+  if (metrics && log) {
+    metrics.createMeter();
+    log.init();
 
-      const preview = getPreview(catId).body;
+    const preview = getPreview(catId).body;
 
-      log.complete();
-      metrics.exit();
+    log.complete();
+    metrics.exit();
 
-      return preview;
-    } else {
-      return getPreview(catId).body;
-    }
-  };
-}
+    return preview;
+  } else {
+    return getPreview(catId).body;
+  }
+};
 
 // Usage
 if (logger) {
-  new Preview().respond("vpaid", new Metrics(), logger);
+  respond("vpaid", initMetrics(), logger);
 } else {
-  new Preview().respond("vpaid");
+  respond("vpaid");
 }
 ```
 
@@ -496,12 +496,11 @@ an argument when only one property (from that object) is needed.
 #### Good
 
 ```ts
-class Team {
-  gender = (genderId: number): string => (genderId === 0 ? "female" : "male");
-}
+const gender = (genderId: number): string =>
+  genderId === 0 ? "female" : "male";
 
 // Usage
-new Team().gender(database.genderId);
+gender(database.genderId);
 ```
 
 The above logic is good because:
@@ -514,14 +513,14 @@ The above logic is good because:
 #### Bad
 
 ```ts
-class Team {
-  private database = new Database();
+const gender = (): string => {
+  const database = initDatabase();
 
-  gender = (): string => (this.database.genderId === 0 ? "female" : "male");
+  return database.genderId === 0 ? "female" : "male");
 }
 
 // Usage
-new Team().gender();
+gender();
 ```
 
 The above logic is bad because:
@@ -533,12 +532,11 @@ The above logic is bad because:
 #### Bad
 
 ```ts
-class Team {
-  gender = (db: Database): string => (db.genderId === 0 ? "female" : "male");
-}
+const gender = (db: Database): string =>
+  db.genderId === 0 ? "female" : "male";
 
 // Usage
-new Team().gender(database);
+gender(initDatabase());
 ```
 
 The above logic is bad because:
