@@ -496,11 +496,10 @@ an argument when only one property (from that object) is needed.
 #### Good
 
 ```ts
-const gender = (genderId: number): string =>
-  genderId === 0 ? "female" : "male";
+const isSeniorCitizen = (age: number): boolean => age >= 65;
 
 // Usage
-gender(database.genderId);
+isSeniorCitizen(user.age);
 ```
 
 The above logic is good because:
@@ -513,14 +512,18 @@ The above logic is good because:
 #### Bad
 
 ```ts
-const gender = (): string => {
-  const database = initDatabase();
+const isSeniorCitizen = (): boolean => {
+  const user = initDatabase().getUser();
 
-  return database.genderId === 0 ? "female" : "male");
-}
+  if (!user) {
+    return false;
+  }
+
+  return user.age >= 65;
+};
 
 // Usage
-gender();
+isSeniorCitizen();
 ```
 
 The above logic is bad because:
@@ -532,17 +535,16 @@ The above logic is bad because:
 #### Bad
 
 ```ts
-const gender = (db: Database): string =>
-  db.genderId === 0 ? "female" : "male";
+const isSeniorCitizen = (db: Database): boolean => db.getUser().age >= 65;
 
 // Usage
-gender(initDatabase());
+isSeniorCitizen(initDatabase());
 ```
 
 The above logic is bad because:
 
 - It's expecting the entire database object when only one property from it is
-  neededs
+  needed
 
 ## Additional Considerations
 
