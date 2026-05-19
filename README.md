@@ -670,8 +670,8 @@ into individual lines for improved readability.
 ```ts
 const asset: PlacementAsset = placement.getAsset(
   projectScope,
-  requestParams(Params.id, Params.age, Params.gender),
-  metaData,
+  defineUserGroup(params.score, params.age, params.gender),
+  getTargetCohort(metadata.time, metadata.geo, metadata.areaCode),
 );
 ```
 
@@ -680,12 +680,12 @@ const asset: PlacementAsset = placement.getAsset(
 ```ts
 const asset: PlacementAsset = placement.getAsset(
   projectScope,
-  Params.id,
-  Params.age,
-  Params.gender,
-  metaData.time,
-  metaData.geo,
-  metaData.areaCode,
+  params.score,
+  params.age,
+  params.gender,
+  metadata.time,
+  metadata.geo,
+  metadata.areaCode,
 );
 ```
 
